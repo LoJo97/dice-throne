@@ -12,6 +12,15 @@ export default class Character {
         this.diceTypes = diceTypes;
         this.die = die;
 
+        this.deck = [];
+        for(let i = 0; i < 30; i++) {
+            this.deck[i] = {id: i};
+        }
+
+        this.discard = [];
+
+        this.hand = [];
+
         this.dice = [
             {result: this.die[0], locked: false},
             {result: this.die[0], locked: false},
@@ -19,6 +28,38 @@ export default class Character {
             {result: this.die[0], locked: false},
             {result: this.die[0], locked: false},
         ];
+    }
+
+    shuffleDeck = () => {
+        let i = this.deck.length;
+        let temp;
+        let rand;
+
+        // While there remain cards to shuffle…
+        while(i) {
+            // Pick a remaining card
+            rand = Math.floor(Math.random() * i--);
+
+            // And swap it with the current card.
+            temp = this.deck[i];
+            this.deck[i] = this.deck[rand];
+            this.deck[rand] = temp;
+        }
+
+        return;
+    }
+
+    drawCard = () => {
+        let card = this.deck.splice(0, 1);
+        this.hand.push(card);
+
+        if(this.deck.length === 0) {
+            this.deck = this.discard;
+            this.discard = [];
+            this.shuffleDeck();
+        }
+
+        return;
     }
 
     rollDie = (dieNum) => {
