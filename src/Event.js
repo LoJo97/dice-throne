@@ -6,8 +6,10 @@ class Event {
         this.returnDamage = 0;
         this.returnDamageType = 'none';
         //Heal/prevent
-        this.heal = 0;
-        this.prevent = 0;
+        this.healPlayer = 0;
+        this.preventPlayer = 0;
+        this.healTarget = 0;
+        this.preventTarget = 0;
         //Status
         this.inflict = [];
         this.gain = [];
@@ -16,6 +18,7 @@ class Event {
         this.getCP = 0;
         this.loseCP = 0;
         this.destroyCP = 0;
+        this.stealCP = 0;
         //Cards
         this.draw = 0;
         this.discard = 0;
@@ -38,6 +41,7 @@ class Event {
         this.getCP += newEvent.getCP;
         this.loseCP += newEvent.loseCP;
         this.destroyCP += newEvent.destroyCP;
+        this.stealCP += newEvent.stealCP;
         //Cards
         this.draw += newEvent.draw;
         this.discard += newEvent.discard;

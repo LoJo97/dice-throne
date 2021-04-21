@@ -1,4 +1,5 @@
 import Character from './Character';
+import Event from './../Event';
 
 const DICE_TYPES = ['Arrow', 'Foot', 'Moon'];
 const die = [
@@ -27,66 +28,60 @@ export default class MoonElf extends Character {
                     let damage = 4;
                     if(numArrows === 4) damage = 5;
                     else if(numArrows === 5) damage = 7;
+
+                    let event = new Event();
+                    event.damage = damage;
+                    event.damageType = 'normal';
                     
-                    return {
-                        damage: damage,
-                        damageType: 'normal',
-                        inflict: [],
-                        gain: [],
-                        heal: 0
-                    };
+                    return event;
                 }
             },
             {
                 name: 'DEMISING SHOT',
                 trigger: [3, 0, 2],
                 resolve: () => {
-                    return {
-                        damage: 4,
-                        damageType: 'normal',
-                        inflict: ['Targeted'],
-                        gain: [],
-                        heal: 0
-                    };
+                    let event = new Event();
+                    event.damage = 4;
+                    event.damageType = 'normal';
+                    event.inflict = ['Targeted'];
+
+                    return event;
                 }
             },
             {
                 name: 'ENTANGLING SHOT',
                 trigger: 'smStraight',
                 resolve: () => {
-                    return {
-                        damage: 7,
-                        damageType: 'normal',
-                        inflict: ['Entangle'],
-                        gain: [],
-                        heal: 0
-                    };
+                    let event = new Event();
+                    event.damage = 7;
+                    event.damageType = 'normal';
+                    event.inflict = ['Entangle'];
+
+                    return event;
                 }
             },
             {
                 name: 'ECLIPSE',
                 trigger: [0, 0, 4],
                 resolve: () => {
-                    return{
-                        damage: 7,
-                        damageType: 'normal',
-                        inflict: ['Blind', 'Entangle', 'Targeted'],
-                        gain: [],
-                        heal: 0
-                    }
+                    let event = new Event();
+                    event.damage = 7;
+                    event.damageType = 'normal';
+                    event.inflict = ['Blind', 'Entangle', 'Targeted'];
+
+                    return event;
                 }
             },
             {
                 name: 'COVERED SHOT',
                 trigger: [2, 3, 0],
                 resolve: () => {
-                    return {
-                        damage: 7,
-                        damageType: 'normal',
-                        inflict: [],
-                        gain: ['Evasive'],
-                        heal: 0
-                    };
+                    let event = new Event();
+                    event.damage = 7;
+                    event.damageType = 'normal';
+                    event.gain = ['Evasive'];
+
+                    return event;
                 }
             },
             {
@@ -101,40 +96,40 @@ export default class MoonElf extends Character {
                         if(type === DICE_TYPES[0] || type === DICE_TYPES[1]) damage++;
                         else cp++;
                     }
-                    return {
-                        damage: damage,
-                        damageType: 'normal',
-                        inflict: ['Blind'],
-                        gain: [],
-                        heal: 0,
-                        negCP: cp
-                    }
+                    
+                    let event = new Event();
+                    event.damage = damage;
+                    event.damageType = 'normal';
+                    event.inflict = ['Blind'];
+                    event.destroyCP = cp;
+
+                    return event;
                 }
             },
             {
                 name: 'BLINDING SHOT',
                 trigger: 'lgStraight',
-                resolve: (roll) => {
-                    return {
-                        damage: 8,
-                        damageType: 'normal',
-                        inflict: ['Blind'],
-                        gain: ['Evasive'],
-                        heal: 0
-                    }
+                resolve: () => {
+                    let event = new Event();
+                    event.damage = 8;
+                    event.damageType = 'normal';
+                    event.inflict = ['Blind'];
+                    event.gain = ['Evasive'];
+                    
+                    return event;
                 }
             },
             {
                 name: 'LUNAR ECLIPSE',
                 trigger: [0, 0, 5],
-                resolve: (roll) => {
-                    return {
-                        damage: 12,
-                        damageType: 'ultimate',
-                        inflict: ['Blind', 'Entangle', 'Targeted'],
-                        gain: ['Evasive'],
-                        heal: 0
-                    }
+                resolve: () => {
+                    let event = new Event();
+                    event.damage = 12;
+                    event.damageType = 'ultimate';
+                    event.inflict = ['Blind', 'Entangle', 'Targeted'];
+                    event.gain = ['Evasive'];
+
+                    return event;
                 }
             }
         ]
@@ -153,13 +148,12 @@ export default class MoonElf extends Character {
                     let damage = 0;
                     damage = Math.floor(types[0] / 2);
 
-                    return {
-                        returnDamage: damage,
-                        prevent: prevent,
-                        inflict: [],
-                        gain: [],
-                        heal: 0
-                    }
+                    let event = new Event();
+                    event.returnDamage = damage;
+                    event.returnDamageType = 'normal';
+                    event.preventTarget = prevent;
+
+                    return event;
                 }
             }
         ]

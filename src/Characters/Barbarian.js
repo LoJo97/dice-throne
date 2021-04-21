@@ -1,4 +1,5 @@
 import Character from './Character';
+import Event from './../Event';
 
 const DICE_TYPES = ['Sword', 'Life', 'Pow'];
 const die = [
@@ -27,53 +28,44 @@ export default class Barbarian extends Character {
                     let damage = 4;
                     if(numSwords === 4) damage = 6;
                     else if(numSwords === 5) damage = 8;
+
+                    let event = new Event();
+                    event.damage = damage;
+                    event.damageType = 'normal';
                     
-                    return {
-                        damage: damage,
-                        damageType: 'normal',
-                        inflict: [],
-                        gain: [],
-                        heal: 0
-                    };            
+                    return event;     
                 }
             },
             {
                 name: 'STURDY BLOW',
                 trigger: [2, 0, 2],
                 resolve: () => {
-                    return {
-                        damage: 4,
-                        damageType: 'undefendable',
-                        inflict: [],
-                        gain: [],
-                        heal: 0
-                    };
+                    let event = new Event();
+                    event.damage = 4;
+                    event.damageType = 'undefendable';
+
+                    return event;
                 }
             },
             {
                 name: 'MIGHTY BLOW',
                 trigger: 'smStraight',
                 resolve: () => {
-                    return {
-                        damage: 9,
-                        damageType: 'normal',
-                        inflict: [],
-                        gain: [],
-                        heal: 0
-                    }
+                    let event = new Event();
+                    event.damage = 9;
+                    event.damageType = 'normal';
+                    return event;
                 }
             },
             {
                 name: 'CRIT BASH',
                 trigger: [0, 0, 4],
                 resolve: () => {
-                    return {
-                        damage: 5,
-                        damageType: 'undefendable',
-                        inflict: ['Stun'],
-                        gain: [],
-                        heal: 0
-                    };
+                    let event = new Event();
+                    event.damage = 5;
+                    event.damageType = 'undefendable';
+                    event.inflict = ['Stun'];
+                    return event;
                 }
             },
             {
@@ -84,18 +76,15 @@ export default class Barbarian extends Character {
                     this.dice.map((d, index) => {
                         if(d.result.type === DICE_TYPES[1]) numHearts++;
                     });
-        
+
                     let heal = 4;
                     if(numHearts === 4) heal = 5;
                     else if(numHearts === 5) heal = 6;
+
+                    let event = new Event();
+                    event.healPlayer = healPlayer;
                     
-                    return {
-                        damage: 0,
-                        damageType: 'none',
-                        inflict: [],
-                        gain: [],
-                        heal: heal
-                    };
+                    return event;
                 }
             },
             {
@@ -109,40 +98,37 @@ export default class Barbarian extends Character {
                         damage += this.dice[i].result.value;
                     }
 
-                    return {
-                        damage: damage,
-                        damageType: 'undefendable',
-                        inflict: damage >= 14 ? ['Concussion'] : [],
-                        gain: [],
-                        heal: 0
-                    };
+                    let event = new Event();
+                    event.damage = damage;
+                    event.damageType = 'undefendable';
+                    event.inflict = damage >= 14 ? ['Concussion'] : [];
+
+                    return event;
                 }
             },
             {
                 name: 'RECKLESS',
                 trigger: 'lgStraight',
                 resolve: () => {
-                    return {
-                        returnDamage: 4,
-                        damage: 15,
-                        damageType: 'normal',
-                        inflict: [],
-                        gain: [],
-                        heal: 0
-                    };
+                    let event = new Event();
+                    event.returnDamage = 4;
+                    event.returnDamageType = 'undefendable',
+                    event.damage = 15;
+                    event.damageType = 'normal';
+
+                    return event;
                 }
             },
             {
                 name: 'RAGE',
                 trigger: [0, 0, 5],
                 resolve: () => {
-                    return {
-                        damage: 15,
-                        damageType: 'ultimate',
-                        inflict: ['Stun'],
-                        gain: [],
-                        heal: 0
-                    };
+                    let event = new Event();
+                    event.damage = 15;
+                    event.damageType = 'ultimate';
+                    event.inflict = ['Stun'];
+
+                    return event;
                 }
             }
         ];
@@ -157,13 +143,11 @@ export default class Barbarian extends Character {
                     for(let i = 0; i < 3; i++) {
                         if(this.dice[i].result.type === DICE_TYPES[1]) heal += 2;
                     }
-                    return {
-                        returnDamage: 0,
-                        prevent: 0,
-                        inflict: [],
-                        gain: [],
-                        heal: heal
-                    };
+
+                    let event = new Event();
+                    event.healTarget = heal;
+                    
+                    return event;
                 }
             }
         ];
