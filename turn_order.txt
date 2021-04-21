@@ -1,0 +1,27 @@
+NINJUTSU = TEMPLATE FOR STATUS
+
+1. Upkeep: resolve status effects and passives as applicable
+
+2. Income phase: gain 1cp, draw card
+
+3. Main phase:
+    - Sell cards for 1cp each
+    - Spend cp to play
+        - Main phase cards 
+        - Upgrade cards
+    - Perform other main phase actions as specified
+
+4. Offensive Roll Phase:
+    - Peform 3 roll attempts, lock dice as needed between rolls
+    - Play roll phase cards (any player)
+        - At conclusion of a player roll (they will have to manually submit dice roll), allow all players to select cards
+            to play. This goes in rounds until all players decide not to play cards/run out of cp?
+
+5. Targeting Roll as applicable
+
+6. Defensive Roll Phase:
+    - Defender activates defensive roll and any defensive abilities at their discretion. Same process for roll phase cards
+
+7. Main phase 2
+
+8. Sell cards past 6 for 1cp

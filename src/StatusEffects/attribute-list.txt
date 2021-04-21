@@ -1,0 +1,14 @@
+TYPE:
+    positive
+    negative
+
+TIMING:
+    upkeep
+    income
+    main
+    attack
+        begin
+        end
+    defending
+    conclusion
+    
