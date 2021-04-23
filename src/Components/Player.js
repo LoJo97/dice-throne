@@ -1,61 +1,43 @@
 import _ from 'lodash';
+import Event from './../Event';
 
 const Player = (props) => {
+    let player = props.game.players[props.playerNum];
+    let target = props.game.players[props.targetNum];
+
     const roll = () => {
-        let p = _.clone(props.player);
-        p.rollDice();
-        props.setPlayer(p);
+        player.rollDice();
+        props.setGame(props.game);
     }
 
     const lockDie = (i) => {
-        let p = _.clone(props.player);
-        if(p.dice[i].locked) p.unlockDie(i);
-        else p.lockDie(i);
-        props.setPlayer(p);
+        if(player.dice[i].locked) player.unlockDie(i);
+        else player.lockDie(i);
+        props.setGame(props.game);
     }
 
     const selectAttack = (attackIndex) => {
-        console.log({target: props.target});
-        let attacker = _.clone(props.player);
-        let defender = _.clone(props.target);
+        let attacker = _.clone(player);
+        let defender = _.clone(target);
         
         let attack = attacker.findValidAttacks()[attackIndex].resolve();
-        console.log({attack: attack});
 
-        let defense = {
-            returnDamage: 0,
-            prevent: 0,
-            inflict: [],
-            gain: [],
-            heal: 0
-        };
-        if(attack.damageType === 'normal') defense = defender.defense[0].resolve();
-        console.log({defense: defense});
+        let defense = new Event();
+        if(attack.damageType === 'normal') defense.reconcile(defender.defense[0].resolve());
 
-        let final = {
-            damage: attack.damage - ((defense.prevent > 0 && defense.prevent < 1) ? Math.ceil(attack.damage * defense.prevent) : defense.prevent),
-            returnDamage: (attack.returnDamage ? attack.returnDamage : 0) + defense.returnDamage,
-            attackerHeal: attack.heal,
-            defenderHeal: defense.heal,
-            inflict: attack.inflict.concat(defense.gain),
-            gain: attack.gain.concat(defense.inflict),
-        }
+        let game = props.game;
+        attack.reconcile(defense);
+        game.resolveEvent(attack, props.playerNum, props.targetNum);
 
-        console.log({final});
-
-        attacker.hp = attacker.hp + final.attackerHeal - final.returnDamage;
-        defender.hp = defender.hp + final.defenderHeal - final.damage;
-
-        props.setPlayer(attacker);
-        props.setTarget(defender);
-
-        return final;
+        props.setGame(_.clone(game));
+        
+        return;
     }
 
     return(
         <div>
-            <h2>{props.player.constructor.name} - HP: {props.player.hp} CP: {props.player.cp}</h2>
-            {props.player.dice.map((d, index) => {
+            <h2>{player.constructor.name} - HP: {player.hp} CP: {player.cp}</h2>
+            {player.dice.map((d, index) => {
             return (
                 <div style={d.locked ? {color: 'red'} : {}} key={index}>
                 <b>{index + 1}</b>: {d.result.value}, {d.result.type} <button onClick={() => lockDie(index)}>{d.locked ? 'Unlock' : 'Lock' }</button>
@@ -63,10 +45,32 @@ const Player = (props) => {
             );
             })}
             <button onClick={() => roll()}>Roll Dice</button>
-            {props.player.findValidAttacks().map((a, index) => {
+            <br/>
+            <b>ATTACKS:</b>
+            {player.findValidAttacks().map((a, index) => {
                 return (
-                    <div key={index} onClick={() => props.target ? selectAttack(index) : null}>
-                    <b>{a.name}</b>
+                    <div key={index} onClick={() => props.targetNum !== null ? selectAttack(index) : null}>
+                        {a.name}
+                    </div>
+                );
+            })}
+            <br/>
+            <b>STATUS EFFECTS:</b>
+            {player.statusEffects.map((status, index) => {
+                console.log(status);
+                return (
+                    <div key={index}>
+                        {status.constructor.name}
+                    </div>
+                );
+            })}
+            <br/>
+            <b>HAND:</b>
+            {player.hand.map((card, index) => {
+                console.log(player.hand)
+                return (
+                    <div key={index}>
+                        {card.id}
                     </div>
                 );
             })}

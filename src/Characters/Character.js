@@ -134,4 +134,9 @@ export default class Character {
             }
         });
     }
+
+    selectAttack = (index) => {
+        let validAttacks = this.findValidAttacks();
+        return validAttacks[index];
+    }
 }

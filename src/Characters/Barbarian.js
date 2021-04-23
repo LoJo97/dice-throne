@@ -1,5 +1,7 @@
 import Character from './Character';
 import Event from './../Event';
+import Concussion from './../StatusEffects/Concussion';
+import Stun from './../StatusEffects/Stun';
 
 const DICE_TYPES = ['Sword', 'Life', 'Pow'];
 const die = [
@@ -12,8 +14,8 @@ const die = [
 ];
 
 export default class Barbarian extends Character {
-    constructor(baseHP, baseCP, setDice, setAttacks) {
-        super(baseHP, baseCP, DICE_TYPES, die, setDice, setAttacks);
+    constructor(baseHP, baseCP, setDice) {
+        super(baseHP, baseCP, DICE_TYPES, die, setDice);
 
         this.attacks = [
             {
@@ -64,7 +66,7 @@ export default class Barbarian extends Character {
                     let event = new Event();
                     event.damage = 5;
                     event.damageType = 'undefendable';
-                    event.inflict = ['Stun'];
+                    event.inflict = [new Stun()];
                     return event;
                 }
             },
@@ -82,7 +84,7 @@ export default class Barbarian extends Character {
                     else if(numHearts === 5) heal = 6;
 
                     let event = new Event();
-                    event.healPlayer = healPlayer;
+                    event.healPlayer = heal;
                     
                     return event;
                 }
@@ -101,7 +103,7 @@ export default class Barbarian extends Character {
                     let event = new Event();
                     event.damage = damage;
                     event.damageType = 'undefendable';
-                    event.inflict = damage >= 14 ? ['Concussion'] : [];
+                    event.inflict = damage >= 14 ? [new Concussion()] : [];
 
                     return event;
                 }
@@ -112,7 +114,7 @@ export default class Barbarian extends Character {
                 resolve: () => {
                     let event = new Event();
                     event.returnDamage = 4;
-                    event.returnDamageType = 'undefendable',
+                    event.returnDamageType = 'undefendable';
                     event.damage = 15;
                     event.damageType = 'normal';
 
@@ -126,7 +128,7 @@ export default class Barbarian extends Character {
                     let event = new Event();
                     event.damage = 15;
                     event.damageType = 'ultimate';
-                    event.inflict = ['Stun'];
+                    event.inflict = [new Stun()];
 
                     return event;
                 }

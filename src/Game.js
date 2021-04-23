@@ -16,7 +16,18 @@ export default class Game {
         this.players = players;
         this.activePlayer = players[0];
         this.turn = 0;
+        this.firstPlayer = 0;
         this.phase = 'UPKEEP';
+    }
+
+    setup = () => {
+        for(let i = 0; i < this.players.length; i++) {
+            this.players[i].shuffleDeck();
+            for(let j = 0; j < 4; j++) {
+                this.players[i].drawCard();
+            }
+            console.log({hand: this.players[i].hand, deck: this.players[i].deck});
+        }
     }
 
     advancePhase = () => {
@@ -46,5 +57,39 @@ export default class Game {
                 this.phase = phases.UPKEEP;
                 return;
         }
+    }
+
+    /**
+     * 
+     * @param {{Event}} event 
+     * @param {{number}} mainIndex 
+     * @param {{number}} targetIndex 
+     */
+    resolveEvent = (event, mainIndex, targetIndex = -1) => {
+        let resolution = event.resolve();
+        let player = this.players[mainIndex];
+        player.hp -= resolution.playerDamage;
+        player.cp += resolution.playerCP;
+        player.statusEffects = player.statusEffects.concat(...resolution.gain);
+        for(let i = 0; i < player.draw; i++) {
+            player.draw();
+        }
+        //Handle remove status
+
+        if(targetIndex > -1) {
+            let target = this.players[targetIndex];
+            target.hp -= resolution.targetDamage;
+            target.cp += resolution.targetCP;
+            target.statusEffects = target.statusEffects.concat(...resolution.inflict);
+            //Handle discard
+            if(target.cp >= resolution.stealCP) {
+                target.cp -= resolution.stealCP;
+                player.cp += resolution.stealCP;
+            }else{
+                player.cp += target.cp;
+                target.cp = 0;
+            }
+        }
+        return;
     }
 }

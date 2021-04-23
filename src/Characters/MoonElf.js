@@ -1,5 +1,9 @@
 import Character from './Character';
 import Event from './../Event';
+import Targeted from './../StatusEffects/Targeted';
+import Evasive from './../StatusEffects/Evasive';
+import Entangle from './../StatusEffects/Entangle';
+import Blind from './../StatusEffects/Blind';
 
 const DICE_TYPES = ['Arrow', 'Foot', 'Moon'];
 const die = [
@@ -43,7 +47,7 @@ export default class MoonElf extends Character {
                     let event = new Event();
                     event.damage = 4;
                     event.damageType = 'normal';
-                    event.inflict = ['Targeted'];
+                    event.inflict = [new Targeted()];
 
                     return event;
                 }
@@ -55,8 +59,8 @@ export default class MoonElf extends Character {
                     let event = new Event();
                     event.damage = 7;
                     event.damageType = 'normal';
-                    event.inflict = ['Entangle'];
-
+                    event.inflict = [new Entangle()];
+                    console.log(event);
                     return event;
                 }
             },
@@ -67,7 +71,7 @@ export default class MoonElf extends Character {
                     let event = new Event();
                     event.damage = 7;
                     event.damageType = 'normal';
-                    event.inflict = ['Blind', 'Entangle', 'Targeted'];
+                    event.inflict = [new Blind(), new Entangle(), new Targeted()];
 
                     return event;
                 }
@@ -79,7 +83,7 @@ export default class MoonElf extends Character {
                     let event = new Event();
                     event.damage = 7;
                     event.damageType = 'normal';
-                    event.gain = ['Evasive'];
+                    event.gain = [new Evasive()];
 
                     return event;
                 }
@@ -100,7 +104,7 @@ export default class MoonElf extends Character {
                     let event = new Event();
                     event.damage = damage;
                     event.damageType = 'normal';
-                    event.inflict = ['Blind'];
+                    event.inflict = [new Blind()];
                     event.destroyCP = cp;
 
                     return event;
@@ -113,8 +117,8 @@ export default class MoonElf extends Character {
                     let event = new Event();
                     event.damage = 8;
                     event.damageType = 'normal';
-                    event.inflict = ['Blind'];
-                    event.gain = ['Evasive'];
+                    event.inflict = [new Blind()];
+                    event.gain = [new Evasive()];
                     
                     return event;
                 }
@@ -126,8 +130,8 @@ export default class MoonElf extends Character {
                     let event = new Event();
                     event.damage = 12;
                     event.damageType = 'ultimate';
-                    event.inflict = ['Blind', 'Entangle', 'Targeted'];
-                    event.gain = ['Evasive'];
+                    event.inflict = [new Blind(), new Entangle(), new Targeted()];
+                    event.gain = [new Evasive()];
 
                     return event;
                 }
