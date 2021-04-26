@@ -4,6 +4,7 @@ import Targeted from './../StatusEffects/Targeted';
 import Evasive from './../StatusEffects/Evasive';
 import Entangle from './../StatusEffects/Entangle';
 import Blind from './../StatusEffects/Blind';
+import cards, {target, type} from './../cards';
 
 const DICE_TYPES = ['Arrow', 'Foot', 'Moon'];
 const die = [
@@ -60,7 +61,6 @@ export default class MoonElf extends Character {
                     event.damage = 7;
                     event.damageType = 'normal';
                     event.inflict = [new Entangle()];
-                    console.log(event);
                     return event;
                 }
             },
@@ -160,6 +160,8 @@ export default class MoonElf extends Character {
                     return event;
                 }
             }
-        ]
+        ];
+
+        this.deck = [...cards];
     }    
 }

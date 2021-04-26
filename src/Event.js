@@ -52,7 +52,6 @@ class Event {
     calculateDamage = () => {
         //Player damage
         let playerDamage = this.returnDamage;
-
         if(this.preventPlayer < 1 && this.preventPlayer > 0) this.playerDamage *= this.preventPlayer;
         else if(playerDamage < this.preventPlayer) playerDamage = 0;
         else playerDamage -= this.preventPlayer;

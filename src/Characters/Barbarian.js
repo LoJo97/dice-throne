@@ -2,6 +2,7 @@ import Character from './Character';
 import Event from './../Event';
 import Concussion from './../StatusEffects/Concussion';
 import Stun from './../StatusEffects/Stun';
+import cards, {target, type} from './../cards';
 
 const DICE_TYPES = ['Sword', 'Life', 'Pow'];
 const die = [
@@ -14,28 +15,25 @@ const die = [
 ];
 
 export default class Barbarian extends Character {
-    constructor(baseHP, baseCP, setDice) {
-        super(baseHP, baseCP, DICE_TYPES, die, setDice);
+    constructor(baseHP, baseCP) {
+        super(baseHP, baseCP, DICE_TYPES, die);
 
         this.attacks = [
             {
                 name: 'SMACK',
                 trigger: [3, 0, 0],
                 resolve: () => {
-                    let numSwords = 0;
-                    this.dice.map((d, index) => {
-                        if(d.result.type === DICE_TYPES[0]) numSwords++;
-                    });
+                    let {types} = this.getRollVals();
         
                     let damage = 4;
-                    if(numSwords === 4) damage = 6;
-                    else if(numSwords === 5) damage = 8;
+                    if(types[0] === 4) damage = 6;
+                    else if(types[0] === 5) damage = 8;
 
                     let event = new Event();
                     event.damage = damage;
                     event.damageType = 'normal';
                     
-                    return event;     
+                    return event;
                 }
             },
             {
@@ -75,7 +73,7 @@ export default class Barbarian extends Character {
                 trigger: [0, 3, 0],
                 resolve: () => {
                     let numHearts = 0;
-                    this.dice.map((d, index) => {
+                    this.dice.map((d) => {
                         if(d.result.type === DICE_TYPES[1]) numHearts++;
                     });
 
@@ -102,7 +100,7 @@ export default class Barbarian extends Character {
 
                     let event = new Event();
                     event.damage = damage;
-                    event.damageType = 'undefendable';
+                    event.damageType = 'normal';
                     event.inflict = damage >= 14 ? [new Concussion()] : [];
 
                     return event;
@@ -152,6 +150,268 @@ export default class Barbarian extends Character {
                     return event;
                 }
             }
+        ];
+
+        this.deck = [
+            ...cards,
+            {
+                id: 19,
+                name: 'SMACK II',
+                cost: 2,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    let {types, nums} = this.getRollVals();
+                    let maxSame = this.findMaxSame(nums);
+        
+                    let damage = 5;
+                    if(types[0] === 4) damage = 7;
+                    else if(types[0] === 5) damage = 9;
+
+                    let event = new Event();
+                    event.damage = damage;
+                    event.damageType = maxSame >= 4 ? 'undefendable' : 'normal';
+                    
+                    return event;
+                }
+            },
+            {
+                id: 20,
+                name: 'SMACK III',
+                cost: 3,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    let {types, nums} = this.getRollVals();
+                    let maxSame = this.findMaxSame(nums);
+        
+                    let damage = 6;
+                    if(types[0] === 4) damage = 8;
+                    else if(types[0] === 5) damage = 10;
+
+                    let event = new Event();
+                    event.damage = damage;
+                    event.damageType = maxSame >= 4 ? 'undefendable' : 'normal';
+                    
+                    return event;
+                }
+            },
+            {
+                id: 21,
+                name: 'STURDY BLOW II',
+                cost: 1,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    let event = new Event();
+                    event.damage = 5;
+                    event.damageType = 'undefendable';
+
+                    return event;
+                }
+            },
+            {
+                id: 22,
+                name: 'STURDY BLOW III',
+                cost: 1,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    let event = new Event();
+                    event.damage = 6;
+                    event.damageType = 'undefendable';
+
+                    return event;
+                }
+            },
+            {
+                id: 23,
+                name: 'MIGHTY BLOW II',
+                cost: 2,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    let event = new Event();
+                    event.damage = 8;
+                    event.damageType = 'undefendable';
+                    return event;
+                }
+            },
+            {
+                id: 24,
+                name: 'CRIT BASH II',
+                cost: 2,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    let event = new Event();
+                    event.damage = 57;
+                    event.damageType = 'undefendable';
+                    event.inflict = [new Stun()];
+                    return event;
+                },
+                newAttack: {
+                    name: 'CRIT SMASH',
+                    trigger: [0, 0, 3],
+                    resolve: () => {    
+                        let event = new Event();
+                        event.damage = 2;
+                        event.damageType = 'undefendable';
+                        event.inflict = [new Concussion()];
+    
+                        return event;
+                    }
+                }
+            },
+            {
+                id: 25,
+                name: 'FORTITUDE II',
+                cost: 2,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    let {types, nums} = this.getRollVals();
+                    let maxSame = this.findMaxSame(nums);
+        
+                    let heal = 5;
+                    if(types[1] === 4) heal = 6;
+                    else if(types[1] === 5) heal = 7;
+
+                    let event = new Event();
+                    event.healPlayer = heal;
+                    event.remove = maxSame >= 3 ? [] : [];
+                    
+                    return event;
+                }
+            },
+            {
+                id: 26,
+                name: 'OVERPOWER II',
+                cost: 2,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    //Roll 3 dice, deal damage = roll value
+                    let damage = 0;
+                    this.rollDice(3);
+                    for(let i = 0; i < 3; i++) {
+                        damage += this.dice[i].result.value;
+                    }
+
+                    let event = new Event();
+                    event.damage = damage;
+                    event.damageType = 'undefendable';
+                    event.inflict = damage >= 10 ? [new Concussion()] : [];
+
+                    return event;
+                },
+                newAttack: {
+                    name: 'WAR CRY',
+                    trigger: [0, 0, 3],
+                    resolve: () => {    
+                        let event = new Event();
+                        event.damage = 2;
+                        event.damageType = 'undefendable';
+                        event.heal = 2;
+    
+                        return event;
+                    }
+                }
+            },
+            {
+                id: 27,
+                name: 'RECKLESS II',
+                cost: 2,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    let event = new Event();
+                    event.returnDamage = 5;
+                    event.returnDamageType = 'undefendable';
+                    event.damage = 20;
+                    event.damageType = 'normal';
+
+                    return event;
+                }
+            },
+            {
+                id: 28,
+                name: 'THICK SKIN II',
+                cost: 3,
+                description: '',
+                type: type.UPGRADE,
+                target: target.SELF,
+                resolve: () => {
+                    let heal = 0;
+                    this.rollDice(3);
+                    let {types} = this.getRollVals();
+                    heal = types[1] * 2;
+
+                    let event = new Event();
+                    event.healTarget = heal;
+                    event.inflict = types[1] >= 2 ? [] : event.inflcit;
+                    
+                    return event;
+                }
+            },
+            {
+                id: 29,
+                name: 'Concuss!',
+                cost: 1,
+                description: 'Inflict Concussion on a chosen opponent.',
+                type: type.MAIN,
+                target: target.OPPONENT,
+                attributes: [
+                    'inflict',
+                    'Concussion'
+                ]
+            },
+            {
+                id: 30,
+                name: 'Head Bash!',
+                cost: 0,
+                description: 'If you successfully dealt at least 8 dmg to an opponent after their defense concluded, play this card to inflict Concussion.',
+                type: type.ROLL,
+                target: target.OPPONENT,
+                attributes: [
+                    'damage>7',
+                    'inflict',
+                    'Concussion'
+                ]
+            },
+            {
+                id: 31,
+                name: 'Get Some!',
+                cost: 2,
+                description: 'Roll 5 dice: Add 1 x swords dmg. Inflict Concussion.',
+                type: type.ROLL,
+                target: target.OPPONENT,
+                attributes: [
+                    'roll::5d::damage::0+1xsword',
+                    'inflict',
+                    'Concussion'
+                ]
+            },
+            {
+                id: 32,
+                name: 'Feelin\' Good!',
+                cost: 0,
+                description: 'Roll 3 dice: Heal 1 + 2 x hearts',
+                type: type.INSTANT,
+                target: target.SELF,
+                attributes: [
+                    'roll::3d::heal::1+2xhearts'
+                ]
+            },
         ];
     }
 }

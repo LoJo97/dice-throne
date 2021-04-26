@@ -1,9 +1,12 @@
+import cards from '../cards';
+
 export default class Character {
     hp = 0;
     cp = 0;
     diceTypes = [];
     die = [];
     attacks = [];
+    specialCards = [];
 
     constructor(baseHP, baseCP, diceTypes, die) {
         this.hp = baseHP;
@@ -11,11 +14,6 @@ export default class Character {
         this.statusEffects = [];
         this.diceTypes = diceTypes;
         this.die = die;
-
-        this.deck = [];
-        for(let i = 0; i < 30; i++) {
-            this.deck[i] = {id: i};
-        }
 
         this.discard = [];
 
@@ -51,7 +49,7 @@ export default class Character {
 
     drawCard = () => {
         let card = this.deck.splice(0, 1);
-        this.hand.push(card);
+        this.hand.push(card[0]);
 
         if(this.deck.length === 0) {
             this.deck = this.discard;
@@ -115,6 +113,14 @@ export default class Character {
         return max;
     }
 
+    findMaxSame = (nums) => {
+        let max = 0;
+        for(let i = 0; i < nums.length; i++){
+            if(nums[i] > max) max = nums[i];
+        }
+        return max;
+    }
+
     findValidAttacks = () => {
         let {types, nums} = this.getRollVals();
 
@@ -138,5 +144,24 @@ export default class Character {
     selectAttack = (index) => {
         let validAttacks = this.findValidAttacks();
         return validAttacks[index];
+    }
+
+    addStatus = (status) => {
+        let statusName = status.constructor.name;
+        let stackLimit = status.stackLimit;
+        let stackCount = 0;
+
+        for(let i = 0; i < this.statusEffects.length; i++) {
+            if(statusName === this.statusEffects[i].constructor.name) stackCount++;
+            if(stackCount >= stackLimit) return;
+        }
+
+        this.statusEffects.push(status);
+    }
+
+    removeStatus = (status) => {
+        let statusIndex = this.statusEffects.findIndex((s) => s.constructor.name === status.constructor.name);
+        if(statusIndex >= 0) return this.statusEffects.splice(statusIndex, 1);
+        return null;
     }
 }

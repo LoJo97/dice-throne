@@ -14,19 +14,16 @@ let phases = {
 export default class Game {
     constructor(players) {
         this.players = players;
-        this.activePlayer = players[0];
+        this.activePlayer = 0;
         this.turn = 0;
         this.firstPlayer = 0;
         this.phase = 'UPKEEP';
-    }
 
-    setup = () => {
         for(let i = 0; i < this.players.length; i++) {
             this.players[i].shuffleDeck();
             for(let j = 0; j < 4; j++) {
                 this.players[i].drawCard();
             }
-            console.log({hand: this.players[i].hand, deck: this.players[i].deck});
         }
     }
 
@@ -70,7 +67,9 @@ export default class Game {
         let player = this.players[mainIndex];
         player.hp -= resolution.playerDamage;
         player.cp += resolution.playerCP;
-        player.statusEffects = player.statusEffects.concat(...resolution.gain);
+        player.statusEffects((status) => {
+            player.addStatus(status);
+        });
         for(let i = 0; i < player.draw; i++) {
             player.draw();
         }
@@ -80,7 +79,9 @@ export default class Game {
             let target = this.players[targetIndex];
             target.hp -= resolution.targetDamage;
             target.cp += resolution.targetCP;
-            target.statusEffects = target.statusEffects.concat(...resolution.inflict);
+            target.statusEffects((status) => {
+                target.addStatus(status);
+            });
             //Handle discard
             if(target.cp >= resolution.stealCP) {
                 target.cp -= resolution.stealCP;

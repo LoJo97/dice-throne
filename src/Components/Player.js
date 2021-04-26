@@ -57,7 +57,6 @@ const Player = (props) => {
             <br/>
             <b>STATUS EFFECTS:</b>
             {player.statusEffects.map((status, index) => {
-                console.log(status);
                 return (
                     <div key={index}>
                         {status.constructor.name}
@@ -67,10 +66,9 @@ const Player = (props) => {
             <br/>
             <b>HAND:</b>
             {player.hand.map((card, index) => {
-                console.log(player.hand)
                 return (
                     <div key={index}>
-                        {card.id}
+                        {card.name ? card.name : card.id}
                     </div>
                 );
             })}

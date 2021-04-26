@@ -48,12 +48,6 @@ function App() {
     setGame(result);
   }
 
-  useEffect(() => {
-    let g = _.clone(game);
-    g.setup();
-    if(!_.isEqual(g, game)) setGame(g);
-  });
-
   return (
     <div style={{display: 'flex'}}>
       <Player game={game} playerNum={0} targetNum={1} setGame={updateGame}/>
