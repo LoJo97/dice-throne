@@ -25,3 +25,31 @@ NINJUTSU = TEMPLATE FOR STATUS
 7. Main phase 2
 
 8. Sell cards past 6 for 1cp
+
+
+
+
+
+
+
+1. Upkeep: Do passive
+2. Upkeep: Resolve status with upkeep trigger
+3. Upkeep: Play instant cards
+4. Move to Income (or skip if Concussion)
+5. Income: Get 1cp and 1 card
+6. Move to Main 1
+7. Main 1: Sell, play main cards, play upgrades, use status effects
+8. Move to Offensive Roll
+9. Offense: Roll dice three times, locking in between each roll
+10. Offense: Lock in final roll
+11. Offense: Play cards in rounds until everyone out of playable cards or pass on playing cards
+11. Move to Targeting roll
+12. Targeting: If more than 2 players, roll for Targeting
+13. Targeting: Play cards to change dice
+14. Move to defensive
+15. Defense: If attack is defendable (does normal damage), do defensvive roll
+16. Defesne: Play cards in rounds til everyone out of cards or passes
+17. Move to main 2
+18. Main 2: Sell, play cards, play upgrades, use status effects
+19. Main 2: If > 6 cards, force sell down to 6
+20. Move to upkeep of next player

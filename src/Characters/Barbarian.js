@@ -4,6 +4,22 @@ import Concussion from './../StatusEffects/Concussion';
 import Stun from './../StatusEffects/Stun';
 import cards, {target, type} from './../cards';
 
+import card19 from './../Media/Cards/Barbarian_19.png';
+import card20 from './../Media/Cards/Barbarian_20.png';
+import card21 from './../Media/Cards/Barbarian_21.png';
+import card22 from './../Media/Cards/Barbarian_22.png';
+import card23 from './../Media/Cards/Barbarian_23.png';
+import card24 from './../Media/Cards/Barbarian_24.png';
+import card25 from './../Media/Cards/Barbarian_25.png';
+import card26 from './../Media/Cards/Barbarian_26.png';
+import card27 from './../Media/Cards/Barbarian_27.png';
+import card28 from './../Media/Cards/Barbarian_28.png';
+import card29 from './../Media/Cards/Barbarian_29.png';
+import card30 from './../Media/Cards/Barbarian_30.png';
+import card31 from './../Media/Cards/Barbarian_31.png';
+import card32 from './../Media/Cards/Barbarian_32.png';
+
+
 const DICE_TYPES = ['Sword', 'Life', 'Pow'];
 const die = [
     {value: 1, type: DICE_TYPES[0]},
@@ -157,6 +173,8 @@ export default class Barbarian extends Character {
             {
                 id: 19,
                 name: 'SMACK II',
+                replaces: 'SMACK',
+                img: card19,
                 cost: 2,
                 description: '',
                 type: type.UPGRADE,
@@ -179,6 +197,8 @@ export default class Barbarian extends Character {
             {
                 id: 20,
                 name: 'SMACK III',
+                replaces: 'SMACK',
+                img: card20,
                 cost: 3,
                 description: '',
                 type: type.UPGRADE,
@@ -201,6 +221,8 @@ export default class Barbarian extends Character {
             {
                 id: 21,
                 name: 'STURDY BLOW II',
+                replaces: 'STURDY BLOW',
+                img: card21,
                 cost: 1,
                 description: '',
                 type: type.UPGRADE,
@@ -216,6 +238,8 @@ export default class Barbarian extends Character {
             {
                 id: 22,
                 name: 'STURDY BLOW III',
+                replaces: 'STURDY BLOW',
+                img: card22,
                 cost: 1,
                 description: '',
                 type: type.UPGRADE,
@@ -231,6 +255,8 @@ export default class Barbarian extends Character {
             {
                 id: 23,
                 name: 'MIGHTY BLOW II',
+                replaces: 'MIGHTY BLOW',
+                img: card23,
                 cost: 2,
                 description: '',
                 type: type.UPGRADE,
@@ -245,6 +271,8 @@ export default class Barbarian extends Character {
             {
                 id: 24,
                 name: 'CRIT BASH II',
+                replaces: 'CRIT BASH',
+                img: card24,
                 cost: 2,
                 description: '',
                 type: type.UPGRADE,
@@ -272,6 +300,8 @@ export default class Barbarian extends Character {
             {
                 id: 25,
                 name: 'FORTITUDE II',
+                replaces: 'FORTITUDE',
+                img: card25,
                 cost: 2,
                 description: '',
                 type: type.UPGRADE,
@@ -294,6 +324,8 @@ export default class Barbarian extends Character {
             {
                 id: 26,
                 name: 'OVERPOWER II',
+                replaces: 'OVERPOWER',
+                img: card26,
                 cost: 2,
                 description: '',
                 type: type.UPGRADE,
@@ -315,7 +347,7 @@ export default class Barbarian extends Character {
                 },
                 newAttack: {
                     name: 'WAR CRY',
-                    trigger: [0, 0, 3],
+                    trigger: [2, 2, 0],
                     resolve: () => {    
                         let event = new Event();
                         event.damage = 2;
@@ -329,6 +361,8 @@ export default class Barbarian extends Character {
             {
                 id: 27,
                 name: 'RECKLESS II',
+                replaces: 'RECKLESS',
+                img: card27,
                 cost: 2,
                 description: '',
                 type: type.UPGRADE,
@@ -346,6 +380,8 @@ export default class Barbarian extends Character {
             {
                 id: 28,
                 name: 'THICK SKIN II',
+                replaces: 'THICK SKIN',
+                img: card28,
                 cost: 3,
                 description: '',
                 type: type.UPGRADE,
@@ -366,6 +402,7 @@ export default class Barbarian extends Character {
             {
                 id: 29,
                 name: 'Concuss!',
+                img: card29,
                 cost: 1,
                 description: 'Inflict Concussion on a chosen opponent.',
                 type: type.MAIN,
@@ -378,6 +415,7 @@ export default class Barbarian extends Character {
             {
                 id: 30,
                 name: 'Head Bash!',
+                img: card30,
                 cost: 0,
                 description: 'If you successfully dealt at least 8 dmg to an opponent after their defense concluded, play this card to inflict Concussion.',
                 type: type.ROLL,
@@ -391,6 +429,7 @@ export default class Barbarian extends Character {
             {
                 id: 31,
                 name: 'Get Some!',
+                img: card31,
                 cost: 2,
                 description: 'Roll 5 dice: Add 1 x swords dmg. Inflict Concussion.',
                 type: type.ROLL,
@@ -404,6 +443,7 @@ export default class Barbarian extends Character {
             {
                 id: 32,
                 name: 'Feelin\' Good!',
+                img: card32,
                 cost: 0,
                 description: 'Roll 3 dice: Heal 1 + 2 x hearts',
                 type: type.INSTANT,

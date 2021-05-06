@@ -1,17 +1,7 @@
 import './App.css';
-import Barbarian from './Characters/Barbarian';
-import MoonElf from './Characters/MoonElf';
-import { useState, useEffect } from 'react';
-import _ from 'lodash';
-
-import Player from './Components/Player';
-import Game from './Game';
+import GameContainer from './Components/GameContainer';
 
 function App() {
-  const player1 = new Barbarian(50, 2);
-  const player2 = new MoonElf(50, 2);
-  const [game, setGame] = useState(new Game([player1, player2]));
-
   //console.log({hp: player.hp, cp: player.cp, dice: player.dice, attacks: player.attacks});
 /*
   let attackRollMap = {
@@ -43,16 +33,8 @@ function App() {
 
   console.log(attackRollMap);
 */
-  const updateGame = (newVal) => {
-    let result = _.clone(newVal);
-    setGame(result);
-  }
-
   return (
-    <div style={{display: 'flex'}}>
-      <Player game={game} playerNum={0} targetNum={1} setGame={updateGame}/>
-      <Player game={game} playerNum={1} targetNum={0} setGame={updateGame}/>
-    </div>
+    <GameContainer/>
   );
 }
 

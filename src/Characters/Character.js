@@ -1,4 +1,4 @@
-import cards from '../cards';
+import {type} from './../cards';
 
 export default class Character {
     hp = 0;
@@ -11,6 +11,8 @@ export default class Character {
     constructor(baseHP, baseCP, diceTypes, die) {
         this.hp = baseHP;
         this.cp = baseCP;
+        this.rolls = 0;
+        this.maxRolls = 3;
         this.statusEffects = [];
         this.diceTypes = diceTypes;
         this.die = die;
@@ -60,14 +62,29 @@ export default class Character {
         return;
     }
 
+    discardCard = (name) => {
+        let handIndex = this.hand.findIndex((c) => c.name === name);
+        let removedCard = this.hand.splice(handIndex, 1);
+        if(!(removedCard[0].type === type.UPGRADE)) this.discard.push(...removedCard);
+    }
+
+    getIncome = () => {
+        this.cp++;
+        this.drawCard();
+    }
+
     rollDie = (dieNum) => {
         if(!this.dice[dieNum].locked) this.dice[dieNum].result = this.die[Math.floor(Math.random() * 6)];
+        return this.dice[dieNum].result;
     }
 
     rollDice = (num = 5) => {
+        if(this.rolls === this.maxRolls) return;
+        
         this.dice.map((d, index) => {
             if(index < num) return this.rollDie(index);
         });
+        this.rolls++;
     }
 
     lockDie = (dieNum) => {
@@ -157,11 +174,39 @@ export default class Character {
         }
 
         this.statusEffects.push(status);
+        console.log(this.statusEffects);
     }
 
     removeStatus = (status) => {
         let statusIndex = this.statusEffects.findIndex((s) => s.constructor.name === status.constructor.name);
         if(statusIndex >= 0) return this.statusEffects.splice(statusIndex, 1);
         return null;
+    }
+
+    useStatus = (status) => {
+        let event = new Event();
+        
+    }
+
+    playCard = (card) => {
+        if(card.cost > this.cp) {
+            console.log('Not enough CP!');
+            return;
+        }
+
+        if(card.type === type.UPGRADE) {
+            this.cp = this.cp - card.cost;
+            this.playUpgrade(card);
+        }
+
+        this.discardCard(card.name);
+    }
+
+    playUpgrade = (upgrade) => {
+        let attack = this.attacks.find(attack => attack.name.includes(upgrade.replaces));
+        attack.name = upgrade.name;
+        attack.resolve = upgrade.resolve;
+
+        if(upgrade.newAttack) this.attacks.push(upgrade.newAttack);
     }
 }

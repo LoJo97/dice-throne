@@ -1,4 +1,5 @@
-import Status, { removeConditions } from './Status';
+import Status, { removeConditions, statusTypes, phases } from './Status';
+import Event from './../Event';
 
 const attributes = [
     'negative',
@@ -8,6 +9,19 @@ const attributes = [
 
 export default class Burn extends Status {
     constructor() {
-        super(attributes, 1, removeConditions.PERSISTENT);
+        super();
+
+        this.removeCondition = removeConditions.PERSISTENT;
+        this.type = statusTypes.NEGATIVE;
+        this.usagePhase = phases.UPKEEP;
+    }
+
+    resolve = (event, game) => {
+        let newEvent = new Event();
+        newEvent.damage += 2;
+        newEvent.damageType = 'normal';
+        event.reconcile(newEvent);
+
+        return event;
     }
 }
