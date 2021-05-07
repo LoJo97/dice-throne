@@ -1,8 +1,9 @@
 import _ from 'lodash';
-import {useState} from 'react';
-import Game, { phases } from './../Game';
-import Event from '../Event';
+import { GameContext, phases } from './../Contexts/GameContext';
+import { PlayersContext } from './../Contexts/PlayersContext';
+import { useContext } from 'react';
 import Status from './Status';
+import DiceContainer from './DiceContainer';
 import { type } from '../cards';
 import { GridList, GridListTile } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,22 +14,17 @@ const useStyles = makeStyles(styles);
 const PlayerContainer = (props) => {
     const classes = useStyles();
 
-    const game = props.game;
-    const event = game.currentEvent;
-    const player = game.players[props.playerNum];
-    const target = game.players[props.targetNum];
+    const {players, setPlayers} = useContext(PlayersContext);
+    const game = useContext(GameContext);
+
+    const player = players[props.playerIndex];
 
     const roll = () => {
         player.rollDice();
-        props.updateGame(props.game);
+        setPlayers([...players]);
     }
 
-    const lockDie = (i) => {
-        if(player.dice[i].locked) player.unlockDie(i);
-        else player.lockDie(i);
-        props.updateGame(props.game);
-    }
-
+/*
     const performAttack = (attackIndex) => {
         let attacker = player;
         let attack = attacker.findValidAttacks()[attackIndex].resolve();
@@ -42,7 +38,7 @@ const PlayerContainer = (props) => {
         event.reconcile(defense);
         props.updateGame(game);
     }
-
+*/
     const playCard = (card) => {
         if(card.type === type.UPGRADE && (game.phase === phases.MAIN_FIRST || game.phase === phases.MAIN_SECOND)) {
             player.playCard(card);
@@ -52,21 +48,17 @@ const PlayerContainer = (props) => {
 
     return(
         <div>
-            <h2 style={{color: game.activePlayer === props.playerNum ? 'green' : 'red'}}>{player.constructor.name} - HP: {player.hp} CP: {player.cp}</h2>
-            {(game.phase === phases.OFFENSE || game.phase === phases.DEFENSE) && player.dice.map((d, index) => {
-                return (
-                    <div style={d.locked ? {color: 'red'} : {}} key={index}>
-                    <b>{index + 1}</b>: {d.result.value}, {d.result.type} <button onClick={() => lockDie(index)}>{d.locked ? 'Unlock' : 'Lock' }</button>
-                    </div>
-                );
-            })}
+            <h2 style={{color: game.activePlayer === props.playerIndex ? 'green' : 'red'}}>
+                {player.constructor.name} - HP: {player.hp} CP: {player.cp}
+            </h2>
+            <DiceContainer playerIndex={props.playerIndex}/>
             {(game.phase === phases.OFFENSE || game.phase === phases.DEFENSE) && <button onClick={() => roll()}>Roll Dice</button>}
             {game.phase === phases.OFFENSE && <div>
                 <br/>
                 <b>ATTACKS:</b>
                 {player.rolls > 0 && player.findValidAttacks().map((a, index) => {
                     return (
-                        <div key={index} onClick={() => props.targetNum !== null ? performAttack(index) : null}>
+                        <div key={index} onClick={() => props.targetNum !== null ? /*performAttack(index)*/null : null}>
                             {a.name}
                         </div>
                     );
@@ -77,7 +69,7 @@ const PlayerContainer = (props) => {
                 <b>DEFENSE:</b>
                 {player.defense.map((d, index) => {
                     return (
-                        <div key={index} onClick={() => performDefense(index)}>
+                        <div key={index} onClick={() => /*performDefense(index)*/null}>
                             {d.name}
                         </div>
                     );

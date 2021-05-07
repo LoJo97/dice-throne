@@ -15,6 +15,11 @@ const styles = {
         objectFit: 'scale-down',
         height: 200,
         width: 129
+    },
+    die: {
+        objectFit: 'scale-down',
+        height: 50,
+        width: 50
     }
 }
 

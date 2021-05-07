@@ -1,40 +1,24 @@
 import './App.css';
+import { useState } from 'react';
+import Barbarian from './Characters/Barbarian';
+import MoonElf from './Characters/MoonElf';
 import GameContainer from './Components/GameContainer';
+import { GameContext, phases } from './Contexts/GameContext';
+import { PlayersContext } from './Contexts/PlayersContext'
 
 function App() {
-  //console.log({hp: player.hp, cp: player.cp, dice: player.dice, attacks: player.attacks});
-/*
-  let attackRollMap = {
-    'SMACK': 0,
-    'STURDY BLOW': 0,
-    'MIGHTY BLOW': 0,
-    'CRIT BASH': 0,
-    'FORTITUDE': 0,
-    'OVERPOWER': 0,
-    'RECKLESS': 0,
-    'RAGE': 0,
-    'NONE': 0
-  }
+  const [players, setPlayers] = useState([new Barbarian(50, 2), new MoonElf(50, 2)]);
+  const [phase, setPhase] = useState(phases.UPKEEP);
+  const [turn, setTurn] = useState(0);
+  const [activePlayer, setActivePlayer] = useState(0);
 
-  let numTrials = 1000000.0;
 
-  for(let i = 0; i < numTrials; i++) {
-    player1.rollDice();
-    let att = player1.findValidAttacks();
-    if(!att.length) attackRollMap['NONE']++;
-    att.map((a, index) => {
-      attackRollMap[a.name]++;
-    })
-  }
-
-  for(let val in attackRollMap) {
-    attackRollMap[val] = (attackRollMap[val] / numTrials) * 100;
-  }
-
-  console.log(attackRollMap);
-*/
   return (
-    <GameContainer/>
+    <PlayersContext.Provider value={{players, setPlayers}}>
+      <GameContext.Provider value={{phase, setPhase, turn, setTurn, activePlayer, setActivePlayer}}>
+        <GameContainer/>
+      </GameContext.Provider>
+    </PlayersContext.Provider>
   );
 }
 

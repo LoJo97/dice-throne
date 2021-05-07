@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import _ from 'lodash';
 import Barbarian from '../Characters/Barbarian';
 import MoonElf from '../Characters/MoonElf';
-import Game, { phases } from '../Game';
+import { GameContext, phases } from './../Contexts/GameContext';
+import { PlayersContext } from './../Contexts/PlayersContext';
 import EventContainer from './EventContainer';
 import PlayerContainer from './PlayerContainer';
 
 const GameContainer = (props) => {
-    const player1 = new Barbarian(50, 2);
-    const player2 = new MoonElf(50, 2);
-    const [game, setGame] = useState(new Game([player1, player2]));
+    const game = useContext(GameContext);
+    const players = useContext(PlayersContext);
 
     const updateGame = (newVal) => {
-        setGame(_.clone(newVal));
+        //setGame(_.clone(newVal));
     }
 
     const clickResolve = () => {
@@ -55,12 +55,12 @@ const GameContainer = (props) => {
                 newPhase = phases.MAIN_SECOND;
                 break;
             case phases.MAIN_SECOND:
-                if(game.players[game.activePlayer].hand.length > 6) {
+                if(players[game.activePlayer].hand.length > 6) {
                     console.log('Discard or play cards before ending your turn');
                     return;
                 }
 
-                if(newTurn === game.players.length - 1) newTurn = 0;
+                if(newTurn === players.length - 1) newTurn = 0;
                 else newTurn++;
                 
                 newPhase = phases.UPKEEP;
@@ -70,18 +70,15 @@ const GameContainer = (props) => {
                 newPhase = phases.UPKEEP;
                 break;
         }
-        
-        setGame((prev) => ({
-            ...prev,
-            turn: newTurn,
-            phase: newPhase
-        }));
+
+        game.setPhase(newPhase);
+        game.setTurn(newTurn);
     }
 
     useEffect(() => {
         if(game.phase === phases.INCOME) {
             console.log(game.phase);
-            game.players[game.activePlayer].getIncome();
+            players.players[game.activePlayer].getIncome();
             updateGame(game);
             advancePhase();
         }
@@ -92,12 +89,14 @@ const GameContainer = (props) => {
             <h1>PHASE: {game.phase}</h1>
             <button onClick={advancePhase}>Advance Phase</button>
             <div style={{display: 'flex'}}>
-                <PlayerContainer game={game} playerNum={game.activePlayer} targetNum={game.targetPlayer} updateGame={updateGame}/>
-                <PlayerContainer game={game} playerNum={game.targetPlayer} targetNum={game.activePlayer} updateGame={updateGame}/>
+                <PlayerContainer playerIndex={0}/>
+                <PlayerContainer playerIndex={1}/>
             </div>
             <br/>
             <b>CURRENT EVENT:</b>
-            <EventContainer game={game} updateGame={updateGame}/>
+            {
+                //<EventContainer game={game} updateGame={updateGame}/>
+            }
             <button onClick={clickResolve}>Resolve Event</button>
         </div>
     );
