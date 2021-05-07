@@ -13,7 +13,6 @@ const Die = (props) => {
     const {players, setPlayers} = useContext(PlayersContext);
 
     const src = `/Media/${players[props.playerIndex].constructor.name}/die${props.die.result.value}.png`;
-    console.log(src);
 
     const toggleLock = () => {
         props.die.locked = !props.die.locked;
