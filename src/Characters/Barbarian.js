@@ -19,7 +19,6 @@ import card30 from './../Media/Cards/Barbarian_30.png';
 import card31 from './../Media/Cards/Barbarian_31.png';
 import card32 from './../Media/Cards/Barbarian_32.png';
 
-
 const DICE_TYPES = ['Sword', 'Life', 'Pow'];
 const die = [
     {value: 1, type: DICE_TYPES[0]},

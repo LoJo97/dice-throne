@@ -1,5 +1,4 @@
 import Status, { removeConditions, statusActivation, statusTypes, phases } from './Status';
-import Event from './../Event';
 
 export default class Bounty extends Status {
     constructor() {
@@ -11,11 +10,9 @@ export default class Bounty extends Status {
         this.usagePhase = phases.OFFENSE;
     }
 
-    resolve = (event, game) => {
-        let newEvent = new Event();
-        newEvent.getCP++;
-        newEvent.damage++;
-        event.reconcile(newEvent);
+    resolve = (event, player = null) => {
+        event.getCP++;
+        event.damage++;
 
         return event;
     }

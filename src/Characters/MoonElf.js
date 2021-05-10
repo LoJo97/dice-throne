@@ -4,7 +4,22 @@ import Targeted from './../StatusEffects/Targeted';
 import Evasive from './../StatusEffects/Evasive';
 import Entangle from './../StatusEffects/Entangle';
 import Blind from './../StatusEffects/Blind';
-import cards, {target, type} from './../cards';
+import cards from './../cards';
+
+import card19 from './../Media/Cards/MoonElf_19.png';
+import card20 from './../Media/Cards/MoonElf_20.png';
+import card21 from './../Media/Cards/MoonElf_21.png';
+import card22 from './../Media/Cards/MoonElf_22.png';
+import card23 from './../Media/Cards/MoonElf_23.png';
+import card24 from './../Media/Cards/MoonElf_24.png';
+import card25 from './../Media/Cards/MoonElf_25.png';
+import card26 from './../Media/Cards/MoonElf_26.png';
+import card27 from './../Media/Cards/MoonElf_27.png';
+import card28 from './../Media/Cards/MoonElf_28.png';
+import card29 from './../Media/Cards/MoonElf_29.png';
+import card30 from './../Media/Cards/MoonElf_30.png';
+import card31 from './../Media/Cards/MoonElf_31.png';
+import card32 from './../Media/Cards/MoonElf_32.png';
 
 const DICE_TYPES = ['Arrow', 'Foot', 'Moon'];
 const die = [

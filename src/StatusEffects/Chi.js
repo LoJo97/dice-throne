@@ -13,4 +13,8 @@ export default class Chi extends Status {
     constructor() {
         super(attributes, 5, removeConditions.SPEND);
     }
+
+    resolve = (event, player = null) => {
+        
+    }
 }

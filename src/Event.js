@@ -1,5 +1,8 @@
 class Event {
     constructor() {
+        //Target/User
+        this.target = null;
+        this.user = null;
         //Damage
         this.damage = 0;
         this.damageType = 'none';
@@ -13,7 +16,8 @@ class Event {
         //Status
         this.inflict = [];
         this.gain = [];
-        this.remove = [];
+        this.removeTarget = [];
+        this.removeUser = [];
         //CP
         this.getCP = 0;
         this.loseCP = 0;
@@ -61,9 +65,9 @@ class Event {
         this.healTarget += newEvent.healTarget;
         this.preventTarget += newEvent.preventTarget;
         //Status
-        this.inflict = this.inflict.concat(...newEvent.inflict);
-        this.gain = this.gain.concat(...newEvent.gain);
-        this.remove = this.remove.concat(...newEvent.remove);
+        this.inflict = this.inflict.concat(newEvent.inflict);
+        this.gain = this.gain.concat(newEvent.gain);
+        this.remove = this.remove.concat(newEvent.remove);
         //CP
         this.getCP += newEvent.getCP;
         this.loseCP += newEvent.loseCP;

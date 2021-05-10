@@ -12,11 +12,13 @@ export const phases = {
 
 const gameStart = {
     activePlayer: 0,
+    targetPlayer: 1,
     turn: 0,
     phase: phases.UPKEEP,
     setActivePlayer: (newPlayer) => {},
     setPhase: (newPhase) => {},
-    setTurn: (newTurn) => {}
+    setTurn: (newTurn) => {},
+    setTargetPlayer: (newTargetPlayer) => {}
 }
 
 export const GameContext = createContext(gameStart);

@@ -1,5 +1,4 @@
 import Status, { removeConditions, statusTypes, phases } from './Status';
-import Event from './../Event';
 
 const attributes = [
     'negative',
@@ -16,12 +15,8 @@ export default class Burn extends Status {
         this.usagePhase = phases.UPKEEP;
     }
 
-    resolve = (event, game) => {
-        let newEvent = new Event();
-        newEvent.damage += 2;
-        newEvent.damageType = 'normal';
-        event.reconcile(newEvent);
-
-        return event;
+    resolve = (event, player = null) => {
+        event.damage += 2;
+        event.damageType = 'normal';
     }
 }

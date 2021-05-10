@@ -1,3 +1,5 @@
+import Event from './Event';
+
 import card01 from './Media/Cards/01.png';
 import card02 from './Media/Cards/02.png';
 import card03 from './Media/Cards/03.png';
@@ -31,6 +33,18 @@ export const type = {
     UPGRADE: 'upgrade'
 }
 
+export const getCardParams = (paramTypes, params = [], index = 0) => {
+    if(index !== paramTypes.length - 1){
+        return (newParam) => {
+            return this.getCardParams(paramTypes, params.push(newParam), index++);
+        }
+    }
+    return (newParam) => {
+        params.push(newParam);
+        return params;
+    };
+}
+
 const cards = [
     {
         id: 1,
@@ -40,11 +54,15 @@ const cards = [
         description: 'Transfer 1 status effect token from a chosen player to another chosen player.',
         type: type.MAIN,
         target: target.ANY,
-        attributes: [
-            'transfer',
-            '1',
-            'status',
-        ]
+        paramTypes: ['giver', 'status', 'receiver'],
+        resolve: (giver, status, receiver) => {
+            let newEvent = new Event();
+            newEvent.giver = giver;
+            newEvent.inflict.push(status);
+            newEvent.removeTarget = [status];
+            newEvent.receiver = receiver;
+            return newEvent;
+        }
     },
     {
         id: 2,
@@ -58,7 +76,14 @@ const cards = [
             'remove',
             'all',
             'status'
-        ]
+        ],
+        paramTypes: ['target'],
+        resolve: (target) => {
+            let newEvent = new Event();
+            newEvent.target = target;
+            newEvent.removeTarget = target.statusEffects;
+            return newEvent;
+        }
     },
     {
         id: 3,
@@ -71,7 +96,14 @@ const cards = [
         attributes: [
             'roll::1d',
             'gain::0.5::CP'
-        ]
+        ],
+        paramTypes: ['self', 'die'],
+        resolve: (self, die) => {
+            let newEvent = new Event();
+            newEvent.user = self;
+            newEvent.getCP = Math.ceil(die.result.value / 2);
+            return newEvent;
+        }
     },
     {
         id: 4,
@@ -85,7 +117,14 @@ const cards = [
             'remove',
             '1',
             'status'
-        ]
+        ],
+        paramTypes: ['target', 'status'],
+        resolve: (target, status) => {
+            let newEvent = new Event();
+            newEvent.target = target;
+            newEvent.removeTarget = [status];
+            return newEvent;
+        }
     },
     {
         id: 5,
@@ -98,7 +137,14 @@ const cards = [
         attributes: [
             'draw',
             '3'
-        ]
+        ],
+        paramTypes: ['self'],
+        resolve: (self) => {
+            let newEvent = new Event();
+            newEvent.user = self;
+            newEvent.draw = 3;
+            return newEvent;
+        }
     },
     {
         id: 6,
@@ -111,7 +157,14 @@ const cards = [
         attributes: [
             'draw',
             '2'
-        ]
+        ],
+        paramTypes: ['self'],
+        resolve: (self) => {
+            let newEvent = new Event();
+            newEvent.user = self;
+            newEvent.draw = 2;
+            return newEvent;
+        }
     },
     {
         id: 7,
@@ -125,7 +178,14 @@ const cards = [
             'remove',
             '1',
             'status'
-        ]
+        ],
+        paramTypes: ['target', 'status'],
+        resolve: (target, status) => {
+            let newEvent = new Event();
+            newEvent.target = target;
+            newEvent.removeTarget = [status];
+            return newEvent;
+        }
     },
     {
         id: 8,
@@ -138,7 +198,14 @@ const cards = [
         attributes: [
             'die',
             '+/-'
-        ]
+        ],
+        paramTypes: ['target', 'die', 'tip'],
+        resolve: (target, die, tip) => {
+            let newEvent = new Event();
+            newEvent.target = target;
+            die.result.value = die.result.value + tip;
+            return newEvent;
+        }
     },
     {
         id: 9,
@@ -150,7 +217,13 @@ const cards = [
         target: target.SELF,
         attributes: [
             'gain::2::CP'
-        ]
+        ],
+        paramTypes: ['self'],
+        resolve: (self) => {
+            let newEvent = new Event();
+            newEvent.user = self;
+            newEvent.getCP = 2;
+        }
     },
     {
         id: 10,
@@ -163,7 +236,13 @@ const cards = [
         attributes: [
             'prevent',
             '6'
-        ]
+        ],
+        paramTypes: ['target'],
+        resolve: (target) => {
+            let newEvent = new Event();
+            newEvent.target = target;
+            newEvent.preventTarget = 6;
+        }
     },
     {
         id: 11,
@@ -176,7 +255,17 @@ const cards = [
         attributes: [
             'change',
             '2'
-        ]
+        ],
+        paramTypes: ['target', 'die', 'die', 'value', 'value'],
+        resolve: (target, die1, die2, value1, value2) => {
+            let newEvent = new Event();
+            newEvent.target = target;
+            die1.result.value = value1;
+            die1.result.type = target.diceTypes[value1 - 1];
+            die2.result.value = value2;
+            die2.result.type = target.diceTypes[value2 - 1];
+            return newEvent;
+        }
     },
     {
         id: 12,
@@ -189,7 +278,13 @@ const cards = [
         attributes: [
             'reroll',
             '2'
-        ]
+        ],
+        /*
+        paramTypes: ['target', 'dieIndex', 'dieIndex'],
+        resolve: (target, die1, die2 = -1) => {
+            
+        }
+        */
     },
     {
         id: 13,
@@ -202,7 +297,15 @@ const cards = [
         attributes: [
             'change',
             '1'
-        ]
+        ],
+        paramTypes: ['target', 'die', 'value'],
+        resolve: (target, die, value) => {
+            let newEvent = new Event();
+            newEvent.target = target;
+            die.result.value = value;
+            die.result.type = target.diceTypes[value - 1];
+            return newEvent;
+        }
     },
     {
         id: 14,
@@ -216,7 +319,15 @@ const cards = [
             'change',
             '1',
             'same'
-        ]
+        ],
+        paramTypes: ['target', 'die', 'valueSame'],
+        resolve: (target, die, value) => {
+            let newEvent = new Event();
+            newEvent.target = target;
+            die.result.value = value;
+            die.result.type = target.diceTypes[value - 1];
+            return newEvent;
+        }
     },
     {
         id: 15,
@@ -230,7 +341,13 @@ const cards = [
             'reroll',
             'phase',
             'offense'
-        ]
+        ],
+        paramTypes: ['target'],
+        resolve: (target) => {
+            let newEvent = new Event();
+            target.rolls--;
+            return newEvent;
+        }
     },
     {
         id: 16,

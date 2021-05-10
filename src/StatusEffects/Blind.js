@@ -1,5 +1,4 @@
 import Status, { removeConditions, statusActivation, statusTypes, phases } from './Status';
-import Event from './../Event';
 
 const attributes = [
     'negative',
@@ -20,13 +19,10 @@ export default class Blind extends Status {
     }
 
     resolve = (event, player) => {
-        let newEvent = new Event();
-        let rollResult = player.rollDie(0);
+        player.getNewDice(1);
+        let rollResult = player.rollDice();
         if(rollResult.value < 3){
-            newEvent.damageType = 'failDamage';
-            event.reconcile(newEvent);
-            return event;
+            event.damageType = 'failDamage';
         }
-        return event;
     }
 }

@@ -1,4 +1,5 @@
 import {type} from './../cards';
+import Event from './../Event';
 
 export default class Character {
     hp = 0;
@@ -78,13 +79,20 @@ export default class Character {
         return this.dice[dieNum].result;
     }
 
-    rollDice = (num = 5) => {
+    rollDice = () => {
         if(this.rolls === this.maxRolls) return;
         
         this.dice.map((d, index) => {
-            if(index < num) return this.rollDie(index);
+            return this.rollDie(index);
         });
         this.rolls++;
+    }
+
+    getNewDice = (num = 5) => {
+        this.dice = [];
+        for(let i = 0; i < num; i++){
+            this.dice.push({result: this.die[0], locked: false});
+        }
     }
 
     lockDie = (dieNum) => {
@@ -188,25 +196,31 @@ export default class Character {
         
     }
 
-    playCard = (card) => {
-        if(card.cost > this.cp) {
-            console.log('Not enough CP!');
-            return;
-        }
-
-        if(card.type === type.UPGRADE) {
-            this.cp = this.cp - card.cost;
-            this.playUpgrade(card);
-        }
-
-        this.discardCard(card.name);
-    }
-
     playUpgrade = (upgrade) => {
         let attack = this.attacks.find(attack => attack.name.includes(upgrade.replaces));
         attack.name = upgrade.name;
         attack.resolve = upgrade.resolve;
 
         if(upgrade.newAttack) this.attacks.push(upgrade.newAttack);
+    }
+
+    playCard = (card, params = []) => {
+        let newEvent = new Event();
+
+        if(card.cost > this.cp) {
+            console.log('Not enough CP!');
+            return;
+        }
+
+        this.cp = this.cp - card.cost;
+
+        if(card.type === type.UPGRADE) {
+            this.playUpgrade(card);
+        }else{
+            newEvent = card.resolve(...params);
+        }
+
+        this.discardCard(card.name);
+        return newEvent;
     }
 }

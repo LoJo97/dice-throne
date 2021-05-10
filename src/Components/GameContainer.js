@@ -1,40 +1,40 @@
-import { useEffect, useState, useContext } from 'react';
-import _ from 'lodash';
-import Barbarian from '../Characters/Barbarian';
-import MoonElf from '../Characters/MoonElf';
+import { useEffect, useContext } from 'react';
 import { GameContext, phases } from './../Contexts/GameContext';
 import { PlayersContext } from './../Contexts/PlayersContext';
-import EventContainer from './EventContainer';
+import { PlayerIndexContext } from './../Contexts/PlayerIndexContext';
+import { EventContext } from './../Contexts/EventContext';
+import Event from './../Event';
 import PlayerContainer from './PlayerContainer';
+import EventContainer from './EventContainer';
 
-const GameContainer = (props) => {
+const GameContainer = () => {
     const game = useContext(GameContext);
-    const players = useContext(PlayersContext);
+    const {players} = useContext(PlayersContext);
+    const {events, setEvents} = useContext(EventContext);
 
-    const updateGame = (newVal) => {
-        //setGame(_.clone(newVal));
-    }
-
-    const clickResolve = () => {
-        game.resolveEvent();
-        updateGame(game);
+    const resolveEvents = () => {
+        let base = new Event();
+        for(let i = 0; i < events.length; i++) {
+            base.reconcile(events[i]);
+        }
+        setEvents([base]);
     }
 
     const swap = () => {
         if(game.activePlayer === 0) {
-          game.activePlayer = 1;
-          game.targetPlayer = 0;
+          game.setActivePlayer(1);
+          game.setTargetPlayer(0);
         }
         else {
-          game.activePlayer = 0;
-          game.targetPlayer = 1;
+          game.setActivePlayer(0);
+          game.setTargetPlayer(1);
         }
-        updateGame(game);
     }
 
     const advancePhase = () => {
-        let newPhase = '';
+        let newPhase = game.phase;
         let newTurn = game.turn;
+        let newActivePlayer = game.activePlayer;
         switch(game.phase) {
             case phases.UPKEEP:
                 newPhase = phases.INCOME;
@@ -60,9 +60,10 @@ const GameContainer = (props) => {
                     return;
                 }
 
-                if(newTurn === players.length - 1) newTurn = 0;
-                else newTurn++;
+                if(newActivePlayer === players.length - 1) newActivePlayer = 0;
+                else newActivePlayer++;
                 
+                newTurn++;
                 newPhase = phases.UPKEEP;
                 swap();
                 break;                
@@ -73,31 +74,39 @@ const GameContainer = (props) => {
 
         game.setPhase(newPhase);
         game.setTurn(newTurn);
+        game.setActivePlayer(newActivePlayer);
     }
 
     useEffect(() => {
         if(game.phase === phases.INCOME) {
-            console.log(game.phase);
-            players.players[game.activePlayer].getIncome();
-            updateGame(game);
+            if(game.turn !== 0) players[game.activePlayer].getIncome();
             advancePhase();
         }
-    }, [game]);
+    }, [game.phase]);
 
     return (
         <div>
             <h1>PHASE: {game.phase}</h1>
             <button onClick={advancePhase}>Advance Phase</button>
             <div style={{display: 'flex'}}>
-                <PlayerContainer playerIndex={0}/>
-                <PlayerContainer playerIndex={1}/>
+                {players.map((player, index) => {
+                    return (
+                        <PlayerIndexContext.Provider value={index} key={index}>
+                            <PlayerContainer/>
+                        </PlayerIndexContext.Provider>
+                    );
+                })}
             </div>
             <br/>
-            <b>CURRENT EVENT:</b>
-            {
-                //<EventContainer game={game} updateGame={updateGame}/>
-            }
-            <button onClick={clickResolve}>Resolve Event</button>
+            <b>CURRENT EVENTS:</b>
+            <div style={{display: 'flex'}}>
+                {events.map((event, index) => {
+                    return (
+                        <EventContainer eventIndex={index}/>
+                    );
+                })}
+            </div>
+            <button onClick={resolveEvents}>Resolve Event</button>
         </div>
     );
 }

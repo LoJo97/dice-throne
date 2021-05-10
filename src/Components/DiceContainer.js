@@ -1,17 +1,18 @@
 import { useContext } from 'react';
-import _ from 'lodash';
 import Die from './Die';
 import { PlayersContext } from './../Contexts/PlayersContext';
+import { PlayerIndexContext } from './../Contexts/PlayerIndexContext';
 
 const DiceContainer = (props) => {
     const {players} = useContext(PlayersContext);
-    const player = players[props.playerIndex];
+    const playerIndex = useContext(PlayerIndexContext);
+    const player = players[playerIndex];
 
     return (
         <div style={{display: 'flex'}}>
             {player.dice.map((die, index) => {
                 return (
-                    <Die die={die} key={index} playerIndex={props.playerIndex}/>
+                    <Die die={die} key={index}/>
                 );
             })}
         </div>

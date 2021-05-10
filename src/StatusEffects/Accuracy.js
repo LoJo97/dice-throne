@@ -8,8 +8,7 @@ export default class Accuracy extends Status {
         this.usagePhase = phases.OFFENSE;
     }
 
-    resolve = (event, game) => {
+    resolve = (event, player = null) => {
         event.damageType = 'undefendable';
-        return event;
     }
 }

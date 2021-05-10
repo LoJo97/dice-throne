@@ -18,15 +18,11 @@ export default class BarbedVine extends Status {
         this.activation = statusActivation.MANUAL;
     }
 
-    resolve = (event, game) => {
-        let newEvent = new Event();
-        newEvent.returnDamage = 0;
-        newEvent.returnDamageType = 'undefendable';
-        if(game.players[game.activePlayer].rollCount > 1) 
-            newEvent.returnDamage += game.players[game.activePlayer].rollCount > 3 ? 
-                game.players[game.activePlayer].rollCount - 1 : 2;
-        event.reconcile(newEvent);
-
-        return event;
+    resolve = (event, player) => {
+        event.returnDamage = 0;
+        event.returnDamageType = 'undefendable';
+        if(player.rollCount > 1) 
+            event.returnDamage += player.rollCount > 3 ? 
+                player.rollCount - 1 : 2;
     }
 }

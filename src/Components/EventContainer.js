@@ -1,5 +1,9 @@
+import { useContext } from 'react';
+import { EventContext } from './../Contexts/EventContext';
+
 const EventContainer = (props) => {
-    const event = props.game.currentEvent;
+    const {events} = useContext(EventContext);
+    const event = events[props.eventIndex];
     const keys = Object.keys(event);
     const values = Object.values(event);
 
